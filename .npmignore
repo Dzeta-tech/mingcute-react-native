@@ -1,0 +1,8 @@
+src/
+mingcute/
+scripts/
+tsconfig.json
+.gitignore
+*.md
+!README.md
+
