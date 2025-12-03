@@ -1,9 +1,20 @@
 {
-  "name": "mingcute-react-native",
-  "version": "1.0.0",
+  "name": "@dzeta-tech/mingcute-react-native",
+  "version": "1.0.1",
   "description": "React Native wrapper for MingCute icons",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "react-native": "lib/index.js",
+  "files": [
+    "lib/**/*",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "pnpm build",

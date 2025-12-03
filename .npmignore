@@ -5,4 +5,9 @@ tsconfig.json
 .gitignore
 *.md
 !README.md
-
+.gitattributes
+.gitmodules
+pnpm-workspace.yaml
+src
+**/*.map
+**/__tests__/**
