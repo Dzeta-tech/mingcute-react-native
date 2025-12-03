@@ -1,6 +1,6 @@
 {
   "name": "@dzeta-tech/mingcute-react-native",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "React Native wrapper for MingCute icons",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,8 +16,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "pnpm build",
+    "build": "tsc && node scripts/copy-svg.js",
+    "prepublishOnly": "pnpm generate-icons && pnpm build",
     "generate-icons": "node scripts/generate-icons.js"
   },
   "keywords": [

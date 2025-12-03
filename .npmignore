@@ -8,6 +8,6 @@ tsconfig.json
 .gitattributes
 .gitmodules
 pnpm-workspace.yaml
-src
 **/*.map
 **/__tests__/**
+!src/svg/**

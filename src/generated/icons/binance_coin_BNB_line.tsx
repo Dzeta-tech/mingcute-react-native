@@ -1,0 +1,15 @@
+import React from 'react';
+import IconSvg from '../../svg/binance_coin_BNB_line.svg';
+
+export interface IconProps {
+  width?: number | string;
+  height?: number | string;
+  fill?: string;
+  stroke?: string;
+  color?: string;
+  [key: string]: any;
+}
+
+export const BinanceCoinBNBLine: React.FC<IconProps> = (props) => {
+  return <IconSvg {...props} />;
+};

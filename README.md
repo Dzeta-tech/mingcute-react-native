@@ -5,19 +5,20 @@ React Native wrapper for [MingCute](https://github.com/Richard9394/MingCute) ico
 ## Installation
 
 ```bash
-pnpm add mingcute-react-native react-native-svg
+pnpm add @dzeta-tech/mingcute-react-native react-native-svg react-native-svg-transformer
 ```
 
 Or with npm:
 
 ```bash
-npm install mingcute-react-native react-native-svg
+npm install @dzeta-tech/mingcute-react-native react-native-svg react-native-svg-transformer --save-dev
 ```
 
 Or with yarn:
 
 ```bash
-yarn add mingcute-react-native react-native-svg
+yarn add @dzeta-tech/mingcute-react-native react-native-svg
+yarn add react-native-svg-transformer --dev
 ```
 
 ### Peer Dependencies
@@ -26,63 +27,116 @@ yarn add mingcute-react-native react-native-svg
 - `react-native` >= 0.60.0
 - `react-native-svg` >= 12.0.0
 
-## Usage
+### Setup react-native-svg-transformer
 
-```tsx
-import { Icon } from 'mingcute-react-native';
+Add the transformer to your `metro.config.js`:
 
-// Basic usage with icon name
-<Icon name="chat_1_fill" size={24} color="#000" />
+```js
+const { getDefaultConfig } = require('expo/metro-config');
 
-// Using variant prop (automatically appends _fill or _line)
-<Icon name="search" variant="line" size={32} color="#007AFF" />
+const config = getDefaultConfig(__dirname);
 
-// Icon name can include variant suffix
-<Icon name="mail_fill" size={24} color="#FF0000" />
+config.transformer = {
+  ...config.transformer,
+  babelTransformerPath: require.resolve('react-native-svg-transformer'),
+};
+config.resolver = {
+  ...config.resolver,
+  assetExts: config.resolver.assetExts.filter((ext) => ext !== 'svg'),
+  sourceExts: [...config.resolver.sourceExts, 'svg'],
+};
+
+module.exports = config;
 ```
 
-## Props
+Or if you're using plain React Native (not Expo):
 
-### Icon Component
+```js
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | **required** | Icon name (slug). Can include `_fill` or `_line` suffix, or use `variant` prop |
-| `size` | `number` | `24` | Icon size in pixels |
-| `color` | `string` | `"#000000"` | Icon color (hex, rgb, or named color) |
-| `variant` | `'fill' \| 'line'` | `'fill'` | Icon variant. Only used if `name` doesn't already include variant suffix |
+const defaultConfig = getDefaultConfig(__dirname);
+const { assetExts, sourceExts } = defaultConfig.resolver;
+
+const config = {
+  transformer: {
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
+  resolver: {
+    assetExts: assetExts.filter((ext) => ext !== 'svg'),
+    sourceExts: [...sourceExts, 'svg'],
+  },
+};
+
+module.exports = mergeConfig(defaultConfig, config);
+```
+
+## Usage
+
+Import icons directly as React components:
+
+```tsx
+import { Chat1Fill, MailLine, SearchFill } from '@dzeta-tech/mingcute-react-native';
+
+// Basic usage
+<Chat1Fill width={24} height={24} />
+
+// With custom color
+<MailLine width={32} height={32} fill="#007AFF" />
+
+// All SVG props are supported
+<SearchFill 
+  width="100%" 
+  height={24} 
+  fill="red"
+  stroke="blue"
+/>
+```
 
 ## Icon Naming
 
-Icons are named using the pattern: `{icon_name}_{variant}`
+Icons are named using PascalCase based on their file names:
 
-- `variant` can be `fill` or `line`
-- Examples: `chat_1_fill`, `mail_line`, `search_fill`
-
-If you provide just the base name (e.g., `search`), the `variant` prop will be used to construct the full name.
+- `chat_1_fill.svg` → `Chat1Fill`
+- `mail_line.svg` → `MailLine`
+- `search_fill.svg` → `SearchFill`
 
 ## TypeScript Support
 
-This package includes full TypeScript support with type-safe icon names:
+This package includes full TypeScript support:
 
 ```tsx
-import { Icon, IconName } from 'mingcute-react-native';
+import { Chat1Fill, IconName } from '@dzeta-tech/mingcute-react-native';
 
-// IconName is a union type of all available icon names
+// Type-safe icon names
 const iconName: IconName = 'chat_1_fill'; // ✅ Type-safe
-const invalid: IconName = 'non_existent'; // ❌ Type error
 ```
 
 ## Available Icons
 
-This package includes over 2000+ icons from the MingCute icon set. To see all available icons, you can:
+This package includes 3000+ icons from the MingCute icon set. All icons are exported as individual components that you can import directly.
 
 ```tsx
-import { getAllIconNames } from 'mingcute-react-native';
-
-const allIcons = getAllIconNames();
-console.log(allIcons); // Array of all icon names
+import { 
+  Chat1Fill, 
+  Chat1Line, 
+  MailFill, 
+  MailLine,
+  // ... and 3000+ more
+} from '@dzeta-tech/mingcute-react-native';
 ```
+
+## Props
+
+All icon components accept standard SVG props:
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `width` | `number \| string` | Icon width |
+| `height` | `number \| string` | Icon height |
+| `fill` | `string` | Fill color |
+| `stroke` | `string` | Stroke color |
+| `color` | `string` | Color (alias for fill) |
+| `...` | `any` | All other SVG props are supported |
 
 ## Development
 
@@ -92,9 +146,9 @@ console.log(allIcons); // Array of all icon names
 pnpm build
 ```
 
-### Generating Icon Registry
+### Generating Icons
 
-The icon registry is generated from the MingCute submodule:
+Icons are generated from the MingCute SVG files:
 
 ```bash
 pnpm generate-icons
@@ -107,4 +161,3 @@ This package is licensed under Apache-2.0, same as the original MingCute icon se
 ## Credits
 
 Icons are from [MingCute](https://github.com/Richard9394/MingCute) by Richard9394.
-
