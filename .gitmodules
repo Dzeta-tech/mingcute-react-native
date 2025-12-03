@@ -1,0 +1,3 @@
+[submodule "mingcute"]
+	path = mingcute
+	url = https://github.com/Richard9394/MingCute.git
